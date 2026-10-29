@@ -1,0 +1,15 @@
+.venv/
+.data/
+__pycache__/
+*.pyc
+.DS_Store
+*.egg-info/
+.uv-cache/
+node_modules/
+.env
+.env.*
+!.env.example
+*.ntweak-partial
+.pytest_cache/
+build/
+dist/

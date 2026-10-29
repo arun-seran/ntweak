@@ -1,0 +1,25 @@
+[project]
+name = "ntweak"
+version = "0.1.0"
+description = "Local neuron steering and chat for Qwen3.5 and other dense Transformers models"
+requires-python = ">=3.11"
+dependencies = [
+  "torch>=2.6,<3",
+  "transformers>=5.2,<6",
+  "safetensors>=0.5",
+  "sentencepiece>=0.2",
+  "pillow>=10",
+]
+
+[project.scripts]
+ntweak = "ntweak.server:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+ntweak = ["static/*", "presets/*"]
+
+[tool.setuptools.packages.find]
+include = ["ntweak*"]

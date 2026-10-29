@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101312"><title>Ntweak · Local neuron studio</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/" aria-label="Ntweak home"><span class="brand-icon">n<span>↗</span></span>ntweak<span class="brand-caption">LOCAL NEURON STUDIO</span></a>
+  <div class="top-actions"><span id="connection" class="status"><i></i>Connecting</span><button id="openModels" class="button secondary"><span aria-hidden="true">▧</span> Models <span class="key">M</span></button></div>
+</header>
+<div class="workspace">
+  <aside class="rack">
+    <div class="rack-title"><div><div class="eyebrow">THE CONTROL ROOM</div><h1>Steering rack</h1></div><span class="rack-symbol" aria-hidden="true">≋</span></div>
+    <div class="recipe-heading"><label for="recipeName" class="sr-only">Recipe name</label><input id="recipeName" class="name-input" maxlength="200" value="My first experiment"><button id="saveRecipe" class="icon-button" aria-label="Save recipe" title="Save recipe">↧</button></div>
+    <div class="recipe-tools"><button id="openImport" class="text-button">↙ Import recipe</button><button id="exportRecipe" class="text-button">Export JSON ↗</button></div>
+    <label for="savedRecipes" class="sr-only">Saved recipes</label><select id="savedRecipes"><option value="">Saved recipes…</option></select>
+    <div class="section-line"><div><h2>Neuron tweaks <span id="tweakCount" class="count">0</span></h2><p>Small changes. Different directions.</p></div><label class="switch" title="Enable all steering"><input id="steeringEnabled" type="checkbox" checked><span></span><span class="sr-only">Enable steering</span></label></div>
+    <div id="tweakList" class="tweak-list"></div>
+    <button id="addTweak" class="button add-button">＋ Add neuron</button>
+    <p class="field-hint">Indices start at 0. A positive dose amplifies; a negative dose pushes the other way.</p>
+    <div class="recipe-model-field"><label for="recipeModel">Recipe model</label><input id="recipeModel" value="Qwen/Qwen3.5-4B" spellcheck="false"></div>
+    <details class="formula" open><summary><span class="little-star">✳</span> How the dose is applied <span>⌄</span></summary><div class="formula-body"><code>dose × median(‖resid<sub>L</sub>‖<sub>1:</sub>)<br>÷ ‖W<sub>down</sub>[:, n]‖</code><p>Added before <code>down_proj</code> on every prompt and generated token. Residual norms are measured in a fresh unsteered pass for each message, excluding token 0.</p><p>Multiplier mode directly scales the neuron's activation. Model weights stay unchanged.</p></div></details>
+    <details class="sampling"><summary>Generation settings <span>⌄</span></summary><div class="sampling-grid">
+      <label>Temperature<input id="temperature" type="number" min="0" max="2" step="0.05" value="0.7"></label>
+      <label>Top p<input id="topP" type="number" min="0.01" max="1" step="0.01" value="0.95"></label>
+      <label>Min p<input id="minP" type="number" min="0" max="1" step="0.01" value="0.05"></label>
+      <label>Repetition penalty<input id="repetitionPenalty" type="number" min="0.1" max="3" step="0.05" value="1.1"></label>
+      <label>Output tokens<input id="maxTokens" type="number" min="1" max="4096" value="512"></label>
+      <label>Seed<input id="seed" type="number" min="0" max="4294967295" value="42"></label>
+      <label>Context limit<input id="maxContext" type="number" min="256" max="32768" value="4096"></label>
+      <label class="checkbox-label"><input id="thinking" type="checkbox">Enable thinking</label>
+    </div><label class="system-label">System prompt<textarea id="systemPrompt" rows="3" placeholder="Optional instructions for the conversation"></textarea></label></details>
+    <div class="rack-footer"><span class="privacy-icon">⌂</span><div><strong>Made to stay on your machine.</strong><p>Local weights. Local conversations.</p></div></div>
+  </aside>
+  <main class="chat-panel">
+    <div class="chat-toolbar"><div class="chat-tab"><span class="tab-icon">▤</span> Playground <span class="live-dot"></span></div><div class="toolbar-right"><button id="exportChat" class="text-button" title="Export conversation">Export chat ↗</button><button id="newChat" class="button quiet">＋ New chat</button></div></div>
+    <div class="model-bar"><button id="modelPicker" class="model-picker"><span class="model-orb">Q</span><span><strong id="activeModel">Qwen3.5 · 4B</strong><small id="modelSubline">Choose a local model to begin</small></span><span class="chevron">⌄</span></button><label class="compare-label"><input id="compare" type="checkbox"><span>Compare with baseline</span><span class="info" title="Runs baseline first, then the steered response with the same seed. Each branch keeps its own history.">i</span></label></div>
+    <div id="chatScroll" class="chat-scroll">
+      <section id="welcome" class="welcome">
+        <div class="welcome-art" aria-hidden="true"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="art-center">n<span>↗</span></div><span class="art-node node-a"></span><span class="art-node node-b"></span><span class="art-node node-c"></span><span class="art-coordinate">L22 · N?</span></div>
+        <div class="eyebrow">A DIFFERENT KIND OF MODEL CUSTOMIZATION</div><h2>Your model.<br>Your <em>direction.</em></h2><p>Dial a neuron up. Nudge another down.<br>Chat with the difference, right here on your machine.</p>
+        <div class="start-steps"><button id="welcomeModels"><span>01</span><div><strong>Bring a model</strong><small>Download Qwen3.5 4B or choose your own</small></div><b>↗</b></button><button id="welcomeRecipe"><span>02</span><div><strong>Make a tweak</strong><small>Add neurons or import a Neuronary recipe</small></div><b>↗</b></button></div>
+        <div class="starter-prompts"><button data-prompt="Describe a place that only exists in your imagination.">A little imagination ↗</button><button data-prompt="Tell me something surprising about the way you think.">A different perspective ↗</button></div>
+      </section>
+      <div id="messages" class="messages" aria-live="polite" aria-relevant="additions"></div>
+    </div>
+    <div class="composer-area"><div id="phase" class="phase" role="status"></div><div id="chatError" class="inline-error" role="alert" hidden></div><form id="chatForm" class="composer"><label class="sr-only" for="prompt">Message your local model</label><textarea id="prompt" placeholder="Start a conversation. See where the tweaks take it…" rows="2" maxlength="100000"></textarea><div class="composer-bottom"><span id="steeringSummary"><i class="small-dot"></i> No active tweaks</span><div><span class="send-hint">↵ to send</span><button id="send" class="send-button" type="submit" aria-label="Send message">↑</button><button id="stop" class="stop-button" type="button" hidden>■ Stop</button></div></div></form><div class="composer-footnote"><span><i class="small-dot"></i> Inference runs locally</span><span>Experimental steering · effects depend on the model & prompt</span></div></div>
+  </main>
+</div>
+<dialog id="modelsDialog" class="models-dialog"><div class="dialog-heading"><div><div class="eyebrow">ON YOUR MACHINE</div><h2>Model library</h2></div><button class="icon-button close-dialog" aria-label="Close model library">×</button></div><div class="dialog-body">
+  <div id="dependencyNotice" class="notice" hidden></div>
+  <div class="featured-model"><div class="model-orb large">Q</div><div><div class="eyebrow">THE STARTING POINT</div><h3>Qwen3.5 · 4B <span class="badge">Recommended</span></h3><p>32 layers. 9,216 neurons per MLP. Original Transformers weights.</p></div><button id="inspectQwen" class="button primary">Get this model ↗</button></div>
+  <section class="library-section"><div class="section-line"><h3>Local models</h3><label class="device-choice">Run on<select id="device"><option value="auto">Auto · best available</option><option value="mps">Apple Metal (MPS)</option><option value="cuda">NVIDIA CUDA</option><option value="cpu">CPU · float32</option></select></label></div><div id="localModels" class="local-models"></div><button id="unloadModel" class="text-button" hidden>Unload model & free memory</button></section>
+  <section class="library-section"><h3>Download from Hugging Face</h3><p class="muted">Any model repository or revision. Select exactly which files to keep locally.</p><form id="inspectForm" class="download-form"><label class="repo-field">Model ID<input id="repoId" value="Qwen/Qwen3.5-4B" placeholder="organization/model-name" required spellcheck="false"></label><label>Revision<input id="revision" value="main" required spellcheck="false"></label><button id="inspectButton" class="button secondary" type="submit">Inspect files</button></form><details class="token-details"><summary>Gated or private repository?</summary><label>Hugging Face read token<input id="hfToken" type="password" autocomplete="off" placeholder="Or set HF_TOKEN before launching"></label><p class="field-hint">Used only for the current request. Never saved in the app.</p></details>
+  <div id="downloadFiles" hidden><div class="file-toolbar"><strong id="fileSummary"></strong><div><button id="selectRecommended" class="text-button">Recommended</button><button id="selectAll" class="text-button">All</button><button id="selectNone" class="text-button">None</button></div></div><div id="fileList" class="file-list"></div><div class="download-footer"><span id="downloadSize"></span><button id="downloadButton" class="button primary">↓ Download selected</button></div></div>
+  <div id="downloadJobs" class="download-jobs" aria-live="polite"></div><div id="modelError" class="inline-error" role="alert" hidden></div></section>
+  <section class="library-section"><h3>Already have the weights?</h3><form id="registerForm" class="register-form"><label class="sr-only" for="localPath">Local model directory</label><input id="localPath" placeholder="/absolute/path/to/model-folder" required spellcheck="false"><button class="button secondary" type="submit">Add local folder</button></form><p class="field-hint">Chat supports Transformers causal language models. Exact steering requires dense <code>mlp.down_proj</code> weights. GGUF / MLX files can be downloaded, but cannot be loaded by this runtime. Qwen recipes only transfer to the same model.</p></section><div id="dataPath" class="data-path"></div>
+</div></dialog>
+<dialog id="importDialog" class="import-dialog"><div class="dialog-heading"><div><div class="eyebrow">BRING YOUR OWN DIRECTION</div><h2>Import a recipe</h2></div><button class="icon-button close-dialog" aria-label="Close recipe import">×</button></div><div class="dialog-body"><div class="import-tabs"><button id="linkTab" class="selected">Neuronary link</button><button id="jsonTab">Paste JSON</button></div><form id="importForm"><div id="linkImport"><label>Recipe link or ID<input id="recipeUrl" value="https://neuronary.org/r/9j43ped5" spellcheck="false"></label><p class="field-hint">Fetches the public neuron list and sampling settings once. The imported recipe stays local.</p></div><div id="jsonImport" hidden><label>Recipe JSON<textarea id="recipeJson" rows="10" spellcheck="false" placeholder='{"name":"My recipe","model":"Qwen/Qwen3.5-4B","neurons":[{"layer":22,"neuron":123,"dose":0.8}]}'></textarea></label><p class="field-hint">Accepts <code>neurons</code>, <code>steer_neurons</code>, and <code>n</code> or <code>neuron</code> indices.</p></div><div id="importError" class="inline-error" role="alert" hidden></div><button id="importButton" class="button primary full-width" type="submit">Import into rack ↙</button></form></div></dialog>
+<div id="toast" class="toast" role="status" hidden></div>
+</body></html>
