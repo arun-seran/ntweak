@@ -175,8 +175,10 @@ Bug reports, reproducible steering experiments, and pull requests are welcome at
 
 Run the Python and DOM checks before submitting changes. Please keep downloaded weights, local caches, environments, and personal workspace data out of commits; `.gitignore` excludes the default locations.
 
+## License
+
+Ntweak is licensed under the [MIT License](LICENSE). Model weights are downloaded separately and remain subject to their respective licenses and access terms.
+
 ## Acknowledgements
 
 The intervention approach is informed by [lyramakesmusic/neuron-explorer](https://github.com/lyramakesmusic/neuron-explorer), an MIT-licensed neuron exploration project. Community recipes come from [Neuronary](https://neuronary.org). Model inference uses [Qwen's Transformers implementation](https://huggingface.co/docs/transformers/en/model_doc/qwen3_5) and [PyTorch](https://pytorch.org).
-
-Model weights are downloaded separately and remain subject to their respective licenses and access terms.
